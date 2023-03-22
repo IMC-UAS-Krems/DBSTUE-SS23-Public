@@ -46,7 +46,7 @@ This is the repository for your playground, exercises, and homework for Database
 
 - replace the setup and teardown methods with a fixture that initialize the database using a temporary file and fills
 
-## Exercise 4: Understand ER Model
+## Exercise 3: Understand ER Model
 
 - Given the University ER Model presented in class briefly describes what entities and relations it contains
 
