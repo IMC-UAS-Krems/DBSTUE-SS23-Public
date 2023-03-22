@@ -2,6 +2,65 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 03: 22/03/2023
+
+### Setup
+
+- create a folder `session3`
+- inside the `session3` folder create the `session3.py` module
+- inside the `session3` folder create a `tests` folder
+- inside the `session3\tests` folder create `test_session3.py` and a `conftest.py`
+
+>> NOTE: `conftest.py` enables you to share fixtures across tests. It is loaded automatically by `pytest`, and any fixtures defined in it are available to test modules in the **same directory and below** automatically. 
+
+- the "production database" must be stored under `session3` and is called `session3.db`
+
+
+## Exercise 1: Create a Database for the University Example
+
+- Given the University ER Model presented in class briefly describes what entities and relations it contains
+
+- Design a Relational Model from the ER Model. Limit yourself to represent all the entities (Professor, Assistant, Student, Lecture) and the following relationships:
+    -   workFor
+    -   hold
+    -   attend 
+    -   require
+
+>> NOTE: think on how you could/should deal with the different cardinalities
+
+- Implement the Relational Model into Sqlite
+
+- Fill it with some test data (using python code!)
+
+
+## Exercise 2: Create Test Fixtures for the Database
+
+- Refactor you code to improve testability
+    - for instance, you can store queries into variables
+
+- Implement the following test fixtures that return a connection to a sqlite database:
+
+    - connection_to_empty_db: creates a test database with schema from Exercise 1 using a temporary file 
+        
+    - connection_to_fresh_test_db: creates a test database with schema from Exercise 1 filled with test data (from exercise 1) using a temporary file. The data must be inserted using queries.
+    
+    - connection_to_stored_test_db: creates a test database with schema from Exercise 1 filled with test data (from exercise 1) by copying an existing test database into a temporary file
+
+- Write tests that check constraints of the implemented relations (e.g., cardinality). Test both positive and negative cases (asserting that Exceptions are raised during tests execution)
+
+## Exercise 3: Extend the database
+
+- Extend the ER model to include the concept of Tutor. Tutors are students that work for the faculty, thus are employees, and are assigned to a lecture. A lecture can have only one tutor, but the same tutor can be tutoring up to 3 lectures.
+
+- Update the Relational Model to include the new changes in the ER Model
+
+- Implement the new Relational Model by extending the code
+
+- Fix the broken tests/fixtures
+
+- Implement tests that check the new relations
+
+
 # Session 02: 15/03/2023
 
 ## Exercise 1: Play around with sqlite (2)
