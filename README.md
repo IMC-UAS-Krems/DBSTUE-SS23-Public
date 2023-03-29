@@ -27,6 +27,85 @@ CARTESIAN PRODUCT (x)
 
 d) Find all pizzerias that serve at least one pizza that Amy eats for less than $10.00.
 
+> Selecte relevant Relation
+Serves, Eats
+
+> Select Amy's preferred Pizzas
+PizzasAmyLoves = R[Amy.pizza <- pizza] (P[ pizza ] - ( S [ Person.name == "Amy" ] - (Eats)) -> (Amy.pizza) )
+
+> From serves we need pizzeria for name, price for the condition and pizza to match amy's favorites
+
+> Get the less than 10s pizza that Amy's like
+AffordablePizzasAmyLoves = S[ price < 10 ] (S[Amy.pizza == pizza] - (PizzasAmyLoves x Serves) ) -> (Amy.pizza, pizzeria, pizza, price, allergens)
+
+> We need the name of the pizzeria
+
+P[ pizzeria ] - ( AffordablePizzasAmyLoves )
+
+
+>> How to test it?
+
+Write the query in SQL
+
+SELECT Pizzeria, 
+FROM Eats JOIN Serves ON Eats.pizza = Serves.pizza
+WHERE Serves.price < 10
+
+>> Write the test cases:
+
+Input: We have some database INSTANCE
+Expected Output: we have some (or none) TUPLES
+
+> Test 1
+If I have this input:
+
+Eats: (Alessio, Margherita)
+Serves: (PizzaGO, Margherita, 12, ...)
+
+Expect Output:
+
+[] - Empty
+
+> Test 2
+If I have this input:
+
+Eats: (Amy, Margherita)
+Serves: (PizzaGO, Margherita, 12, ...)
+
+Expect Output:
+
+[] - Empty
+
+> Test 3
+If I have this input:
+
+Eats: (Amy, Margherita)
+Serves: (PizzaGO, Margherita, 9.95, ...)
+
+Expect Output:
+[ PizzaGO ]
+
+> Test 4
+If I have this input:
+
+Eats: (Amy, Margherita), (Amy, Marinara)
+Serves: (PizzaGO, Margherita, 9.95, ...), (Domino, Marinara, 9.95, ...)
+
+Expect Output:
+[ PizzaGO, Domino ]
+
+> Test 4
+If I have this input:
+
+Eats: (Amy, Margherita)
+Serves: (PizzaGO, Margherita, 9.95, ...), (Domino, Marinara, 9.95, ...)
+
+Expect Output:
+[ PizzaGO ]
+
+Find all pizzerias that serve at least one pizza that Amy eats for less than $10.00.
+
+
 
 
 
