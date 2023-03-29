@@ -9,8 +9,8 @@ This is the repository for your playground, exercises, and homework for Database
 Consider a database with the following relational model (schema):
 
 - Person (<ins>name</ins>, age, gender)
-- Frequents (<ins>Person.name, pizzeria</ins>)
-- Eats (<ins>Person.name</ins>, pizza)
+- Frequents (<ins>Person.name, pizzeria</ins>) (this is a N:M relation)
+- Eats (<ins>Person.name, pizza</ins>) (this is a N:M relation)
 - Serves (<ins>pizzeria, pizza</ins>, price, allergens)
 
 >> NOTE: Limit genders to male/female/other
@@ -23,6 +23,117 @@ UNION (U), INTERSECTION (i), DIFFERENCE (/)
 PROJECTION (P), SELECTION (S)
 CARTESIAN PRODUCT (x)
 (JOIN)
+
+c) Find the names of all females who eat both "mushroom" and "pepperoni" pizza.
+
+> Women that eats pizza
+
+OnlyWomen
+
+(name, age, pizza)
+
+Ada, 19, mushroom
+Ada, 19, pepperoni
+Leila, 45, mushroom
+Diana, 75, pepperoni
+
+---> Ada
+
+WomenPizzas = S [ pizza == "mushroom" AND pizza == "pepperoni" ] - (OnlyWomen) - Yay!
+This does not work because the condition is TRIVIALLY FALSE. We need another way
+
+WomenLikeMushroomPizzas = P[ name ] -  (S [ pizza == "mushroom" ] - (OnlyWomen) -> (name, age, gender, pizza))
+
+Ada
+Leila
+
+WomenLikePepperoniPizzas = P[ name ] - (S [ pizza == "pepperoni" ] - (OnlyWomen) -> (name, age, gender, pizza))
+
+Ada
+Diana
+
+WomenLikeMushroomPizzas INTERSECTION WomenLikePepperoniPizzas = Ada
+
+Self-Join
+I do a join (cartesian product followed by selection and projection, and renaming)
+
+Ada, 19, mushroom, pepperoni
+Ada, 19, pepperoni, mushroom,
+Leila, 45, mushroom, mushroom
+Diana, 75, pepperoni, pepperoni
+
+WomenSelfJoin = (name, age, eats_pizza_1, eats_pizza_2)
+
+S [ eats_pizza_1 == eats_pizza_2 ] - (WomenSelfJoin)
+    Leila, 45, mushroom, mushroom
+    Diana, 75, pepperoni, pepperoni
+
+S [ eats_pizza_1 != eats_pizza_2 ] - (WomenSelfJoin)
+    Ada, 19, mushroom, pepperoni
+    Ada, 19, pepperoni, mushroom
+
+S [ eats_pizza_1 == "mushroom" AND eats_pizza_2 = "pepperoni" ] - (WomenSelfJoin) - Ada, 19, mushroom, pepperoni
+
+P [ name ] - (S [ eats_pizza_1 != eats_pizza_2 ] - (WomenSelfJoin))
+    Ada
+
+P [ name ] ( S [ eats_pizza_1 == "mushroom" AND eats_pizza_2 = "pepperoni" ] - (WomenSelfJoin))
+    Ada
+
+
+
+
+
+
+d) Find all pizzerias that serve at least one pizza that Amy eats for less than $10.00.
+
+e) Find all pizzerias that are frequented by only females or only males.
+
+
+b) Find the names of all females who eat either "mushroom" or "pepperoni" pizza (or both).
+
+> Selected the relevant relations
+Person
+Eats 
+
+> Combine them and select only female
+
+OnlyWomen = S [ gender == "female" ] (P [name, age, pizza] ( S [name == Person.name] (Person x Eats) ) ) -> (name, age, gender, pizza)
+
+> Selected women that eat one OR the other pizza
+
+WomenPizzas = S [ pizza == "mushroom" OR pizza == "pepperoni" ] - (OnlyWomen)
+
+> Give the name of those women
+
+>> Note:
+>> P[] - (WomenPizzas)  -> () (select none, get none)
+>> P[*] - (WomenPizzas)  -> ((name, age, gender, pizza)) -> (select all, get all)
+
+Projection requires a list of list of attributes (projection list):
+
+P [ name ] - (WomenPizzas) -> (name)
+
+---- Is there another way to get those names?
+
+WomenLikeMushroomPizzas = S [ pizza == "mushroom" ] - (OnlyWomen) -> (name, age, gender, pizza)
+WomenLikePepperoniPizzas = S [ pizza == "pepperoni" ] - (OnlyWomen) -> (name, age, gender, pizza)
+
+The set of attributes is the same, so I can apply UNION
+
+WomenPizzas = WomenLikeMushroomPizzas U WomenLikePepperoniPizzas -> (name, age, gender, pizza)
+
+P [ name ] - (WomenPizzas) -> (name)
+
+If S has size |S| and T has size |T|, what's the size of S x T: |S x T| ??  |S| * |T|
+
+
+
+
+
+
+
+
 
 
 a) Find all pizzerias frequented by at least one person under the age of 18.
