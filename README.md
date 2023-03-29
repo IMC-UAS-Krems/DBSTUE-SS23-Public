@@ -9,23 +9,117 @@ This is the repository for your playground, exercises, and homework for Database
 Consider a database with the following relational model (schema):
 
 - Person (<ins>name</ins>, age, gender)
-- Frequents (<ins>name, pizzeria</ins>)
-- Eats (<ins>name</ins>, pizza)
+- Frequents (<ins>Person.name, pizzeria</ins>)
+- Eats (<ins>Person.name</ins>, pizza)
 - Serves (<ins>pizzeria, pizza</ins>, price, allergens)
 
 >> NOTE: Limit genders to male/female/other
 
+
 ## Step 1: Write relational algebra expressions for the following queries:
 
+Available Operators
+UNION (U), INTERSECTION (i), DIFFERENCE (/)
+PROJECTION (P), SELECTION (S)
+CARTESIAN PRODUCT (x)
+(JOIN)
+
+
 a) Find all pizzerias frequented by at least one person under the age of 18.
+
+> Which relation to include?
+
+Frequents, Person
+
+> Get the person under age of 18:
+
+S [ age < 18 ] - ( Person ) --> All the Underage persons 
+
+> Match by name persons across Person and Frequents
+
+UnderageName = P[ name ] ( S [ age < 18 ] - ( Person ) ) --> All the names of underage persons
+
+> Use the Cartesian Product
+ 
+Frequents x Person = ((Person.name, pizzeria), (name, age, gender)) ---> Is this 100% correct?
+
+Alessio, PizzaMama
+Andrew, PizzaGo
+
+Alessio, 41, Male
+Andrew, 17, Male
+
+
+Alessio, PizzaMama, Alessio, 41, Male
+Alessio, PizzaMama, Andrew, 17, Male
+Andrew, PizzaGo, Alessio, 41, Male
+Andrew, PizzaGo, Andrew, 17, Male
+ 
+> Select from the Cartesian Product ONLY the tuples that have same Name/Person.Name. We create a relation as subset of Cartesian Product
+
+PersonFrequentPizzeria = S [ Person.name = name ] - ( Frequents x Person )
+
+Alessio, PizzaMama, Alessio, 41, Male
+Andrew, PizzaGo, Andrew, 17, Male
+
+MERGE - Do we have this operation? No, but we can get rid of one
+
+Alessio, PizzaMama, 41
+Andrew, PizzaGo, 17
+
+PersonFrequentPizzeria = P [name, pizzeria, age] ( S [ Person.name = name ] - ( Frequents x Person ))
+
+
+PersonFrequentPizzeria: {[name, pizzeria, age]}
+Alessio, PizzaMama, 41
+Andrew, PizzaGo, 17
+
+
+> Select from PersonFrequentPizzeria all the underage person
+
+S [ age < 18 ] - ( PersonFrequentPizzeria ) --> Andrew, PizzaGo, 17
+
+> Get the name of the pizzeria 
+
+P [ pizzeria ] ( S [ age < 18 ] - ( PersonFrequentPizzeria ) ) --> PizzaGo
+
+> Get the name of pizzeria and the name of person
+
+P [ pizzeria, name ] ( S [ age < 18 ] - ( PersonFrequentPizzeria ) ) --> PizzaGo, Andrew
+
+P [ pizzeria, name ] ( S [ age < 18 ] - ( P [name, pizzeria, age] ( S [ Person.name = name ] - ( Frequents x Person )) ) )
+
+----- QUERY ------
+
+Python App <== ORM (Python) <== Database
+
+ORM = Object Relation Mapping
+ORM Knows the Relational Schema
+Create a python Object, Person out of it
+
+------------------
+
+SELECT pizzeria, name
+FROM Person JOIN Frequents ON Person.name == Frequents.Person.Name
+WHERE age < 18
+
+--------------------------
+
+
 b) Find the names of all females who eat either mushroom or pepperoni pizza (or both).
+
 c) Find the names of all females who eat both mushroom and pepperoni pizza.
+
 d) Find all pizzerias that serve at least one pizza that Amy eats for less than $10.00.
+
 e) Find all pizzerias that are frequented by only females or only males.
-f) For each person, find all pizzas the person eats that are not served by any pizzeria the
-person frequents. Return all such person (name) / pizza pairs.
+
+f) For each person, find all pizzas the person eats that are not served by any pizzeria the person frequents. Return all such person (name) / pizza pairs.
+
 g) Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
+
 h) Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
+
 i) Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
 
 ## Step 2: Implement the database and the queries in Sqlite
