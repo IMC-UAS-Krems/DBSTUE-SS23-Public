@@ -2,6 +2,49 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 04: 29/03/2023
+
+## Exercise 1: 
+
+Consider a database with the following relational model (schema):
+
+- Person (<ins>name</ins>, age, gender)
+- Frequents (<ins>name, pizzeria</ins>)
+- Eats (<ins>name</ins>, pizza)
+- Serves (<ins>pizzeria, pizza</ins>, price, allergens)
+
+>> NOTE: Limit genders to male/female/other
+
+## Step 1: Write relational algebra expressions for the following queries:
+
+a) Find all pizzerias frequented by at least one person under the age of 18.
+b) Find the names of all females who eat either mushroom or pepperoni pizza (or both).
+c) Find the names of all females who eat both mushroom and pepperoni pizza.
+d) Find all pizzerias that serve at least one pizza that Amy eats for less than $10.00.
+e) Find all pizzerias that are frequented by only females or only males.
+f) For each person, find all pizzas the person eats that are not served by any pizzeria the
+person frequents. Return all such person (name) / pizza pairs.
+g) Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
+h) Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
+i) Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+## Step 2: Implement the database and the queries in Sqlite
+
+- Implement the database in Sqlite
+- Write fixtures to insert data and create test databases
+- Read about queries and SQL operators online (try not to use ChatGPT, instead face the challenge of understanding something on your own)
+- Write some queries using the Sqlite command line interface or GUI
+- Implement those queries in python using "query templates" and "bulk/batch" insert
+- Tests whether the queries give you the results you expect (from Step 1 and some test data you can guess what should be the result of -at least some- those queries)
+    - Are all the tuples there?
+    - Do the resulting tuples have the right attributes names?
+    - Do the resulting tuples have all the expected attributes?
+
+
+## Step 3: Reverse Engineer an ER Model for the Relational Schema
+
+- Having an ER helps with documenting your database and spot possible inconsistencies
+
 # Session 03: 22/03/2023
 
 ### Setup
