@@ -19,14 +19,185 @@ Consider a database with the following relational model (schema):
 ## Step 1: Write relational algebra expressions for the following queries:
 
 Available Operators
+RENAMING(R)
 UNION (U), INTERSECTION (i), DIFFERENCE (/)
 PROJECTION (P), SELECTION (S)
 CARTESIAN PRODUCT (x)
-(JOIN)
+
+
+d) Find all pizzerias that serve at least one pizza that Amy eats for less than $10.00.
+
+
+
+
+e) Find all pizzerias that are frequented by only females or only males.
+
+f) For each person, find all pizzas the person eats that are not served by any pizzeria the person frequents. Return all such person (name) / pizza pairs.
+
+g) Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
+
+h) Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
+
+i) Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+
+c) Find the names of all females who eat both "mushroom" and "pepperoni" pizza.
+
+Result = WomenPepperoni INTERSECTION WomenMushroom
+
+S [WP1 = "mushroom" AND WP2 = "pepperoni" ] - (SelfJoined)
+OR
+S [WP2 = "mushroom" AND WP1 = "pepperoni" ] - (SelfJoined)
+
+
+b) Find the names of all females who eat either "mushroom" or "pepperoni" pizza (but NOT both of them).
+
+> Select the relevant Tables/Relations
+
+Person
+Eats
+
+> Intersect works onlyl for same set of attributes
+so we cannot intersect (name, age, gender) INTERSECT (Person.name, pizza)
+
+> We do the cross product
+(Person x Eats) -> (name, age, gender, Person.name, pizza)
+
+> We select the cross product by making sure that the persons' name matches
+S[ name == Person.name ] - (Person x Eats) -> (name, age, gender, Person.name, pizza)
+
+> We project to eliminate the duplicate name
+PersonEatsJoined = P[ name, age, gender, pizza] - (Person x Eats) -> (name, age, gender, pizza)
+
+> Select all the women
+WomenPizza = S [ gender = "female" ] - (PersonEatsJoined) -> (name, age, gender, pizza)
+
+> Select what the eat
+WomenPepperoni = S[ pizza = "pepperoni" ] - (WomenPizza) -> (name, age, gender, pizza)
+WomenMushroom = S[ pizza = "mushroom" ] - (WomenPizza) -> (name, age, gender, pizza)
+
+> Use the union! But does not work, becauyse it also includes the one that eat BOTH pizza
+WomenPepperoni U WomenMushroom -> Not good, because it also includes the persons that eat both
+
+> Compute the SymmetricDifference
+WomenPepperoni INTERSECTION WomenMushroom -> I get ONLY the one the eat both
+
+(WomenPepperoni U WomenMushroom) / (WomenPepperoni INTERSECTION WomenMushroom)
+
+XOR
+
+*** Use a smarter selection!
+> Option 1: OR Does not work because it gets both
+Result = S[ pizza = "pepperoni" OR pizza = "mushroom" ]- (WomenPizza) -> (name, age, gender, pizza)
+
+> Option 2: OR Does not work because it gets none
+Result = S[ (pizza = "pepperoni" OR pizza = "mushroom") AND NOT (pizza = "pepperoni" AND pizza = "mushroom")]- (WomenPizza) -> (name, age, gender, pizza)
+
+Alessia, 17, pepperoni
+Alessia, 17, mushroom
+Diana, 45, pepperoni
+
+The conditions are evaluate on ONE TUPLE at the time
+so pizza = "pepperoni" AND pizza = "mushroom" is trivially FALSE
+
+SELF-JOIN
+SelfJoined = P[WP1.name, WP1.age, WP1.gender, WP1.pizza, WP2.pizza] ( S[WP1.name = WP2.name] - (WomenPizza as WP1 x WomenPizza as WP2))
+ -> (name, age, gender, pizza, pizza)
+
+Alessia, 17, pepperoni, pepperoni
+Alessia, 17, mushroom, pepperoni
+Alessia, 17, pepperoni, mushroom
+Alessia, 17, mushroom, mushroom
+
+Diana, 45, pepperoni, Diana, 45, pepperoni
+
+S [WP1 = "mushroom" AND WP2 = "pepperoni" ] - (SelfJoined)
+
+Alessia, 17, pepperoni, pepperoni
+Alessia, 17, mushroom, mushroom
+Diana, 45, pepperoni, Diana, 45, pepperoni <<>>
+
+Diana
+
+>> Is this indeed possible without interesection and union? Find it out @ Home
+
 
 a) Find all pizzerias frequented by at least one person under the age of 18.
 
-b) Find the names of all females who eat either "mushroom" or "pepperoni" pizza (or both).
+> What relation(s) do you need to solve this query?
+
+Frequents
+Person
+
+Person Instance:
+
+Alessio, 41, Male
+Alan, 17, Male
+Bella, 17, Female
+Charlie, 12, Male
+
+Frequents Instance:
+
+Alessio, GoPizza
+Alan, PizzaDomino
+Bella, PizzaDomino
+Charlie, MamaPizza
+
+
+- First we have to join Frequents and Selection from Person
+> Select underage persons
+
+UnderAge = S [ age < 18 ] - (Person) -> (name, age, gender)
+(Alan, 17, Male)
+(Bella, 17, Female)
+(Charlie, 12, Male)
+
+Join Frequents with UnderAge over Person.name from Frequents and name from UnderAge
+
+Frequents x UnderAge -> (Person.name, pizzeria, name, age, gender)
+
+> How many items has the cross product?
+
+If you have S and T, what's the size of S x T, i.e., |S x T| ? |S| * |T|
+
+Counts all possibilties! We need to make sure we represent consistently the relation Frequents
+
+(Alan, 17, Male)
+(Bella, 17, Female)
+(Charlie, 12, Male)
+
+Alessio, GoPizza
+Alan, PizzaDomino
+Bella, PizzaDomino
+Charlie, MamaPizza
+
+(Alessio, GoPizza), (Alan, 17, Male)
+(Alessio, GoPizza), (Bella, 17, Female)
+(Alessio, GoPizza), (Charlie, 12, Male)
+
+(Alan, PizzaDomino), (Alan, 17, Male)
+,,,
+...
+
+> Filter by name of person that matches over the relations
+S[ Person.name == name ] - (Frequents x UnderAge)
+
+PizzaDomino, Alan, Alan, 17, Male
+PizzaDomino, Bella, Bella, 17, Female
+MamaPizza, Charlie, Charlie, 12, Male
+
+UnderagePizza = P[ pizzeria, name, age ] - ( S[ Person.name == name ] - (Frequents x UnderAge) )
+
+The projection requires a list of attributes to work
+
+PizzaDomino, Alan, 17
+PizzaDomino, Bella, 17
+MamaPizza, Charlie,12
+
+Result = P[ pizzera ] - (UnderagePizza)
+
+(PizzaDomino, MamaPizza)
+
 
 c) Find the names of all females who eat both "mushroom" and "pepperoni" pizza.
 
