@@ -1,0 +1,38 @@
+CREATE TABLE Person (
+   id INTEGER PRIMARY KEY AUTOINCREMENT, 
+	name VARCHAR(50) NOT NULL,
+	age INTEGER CHECK (age > -1),
+	gender CHAR CHECK (gender IN ("M", "F", "O"))
+);
+
+CREATE TABLE Frequents (
+	person_id INTEGER NOT NULL ,
+	pizzeria VARCHAR(255) NOT NULL,
+	PRIMARY KEY(person_id, pizzeria),
+	FOREIGN KEY(person_id) REFERENCES Person(id)
+);
+
+
+CREATE TABLE Eats (
+	person_id INTEGER NOT NULL ,
+	pizza VARCHAR(255) NOT NULL,
+	PRIMARY KEY(person_id, pizza),
+	FOREIGN KEY(person_id) REFERENCES Person(id)
+);
+
+CREATE TABLE Serves (
+	pizzeria VARCHAR(255) NOT NULL,
+	pizza VARCHAR(255) NOT NULL,
+	price NUMERIC(5,2),
+	PRIMARY KEY(pizzeria, pizza)
+);
+
+
+CREATE TABLE Person (
+   id INTEGER PRIMARY KEY AUTOINCREMENT, 
+	name VARCHAR(50) NOT NULL,
+	age INTEGER CHECK (age > -1),
+	gender CHAR CHECK (gender IN ("M", "F", "O"))
+);
+
+INSERT INTO Person(name, age, gender) VALUES ("Alessio", 42, "M"), ("Foo", 13, "O"); 

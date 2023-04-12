@@ -1,0 +1,61 @@
+CREATE TABLE Person (
+	name VARCHAR(255), -- TEXT capped (but limited) 65K chars
+	age UNSIGNED INT NOT NULL CHECK (age < 130),
+	gender CHAR CHECK (gender IN ("M", "F", "O")),
+	PRIMARY KEY(name, 	lastname )
+);
+
+CREATE TABLE Frequents (
+	name VARCHAR(255) NOT NULL,
+	pizzeria VARCHAR(255) NOT NULL,
+	PRIMARY KEY(name, pizzeria),
+	FOREIGN KEY (name) REFERENCES Person(name)	
+);
+
+CREATE TABLE Eats(
+	name VARCHAR(255) NOT NULL,
+	pizza VARCHAR(255) NOT NULL,
+	PRIMARY KEY(name, pizza),
+	FOREIGN KEY (name) REFERENCES Person(name)
+);
+
+CREATE TABLE Serves(
+	pizzeria VARCHAR(255) NOT NULL,
+	pizza VARCHAR(255) NOT NULL,
+	price NUMERIC(10,2) NOT NULL CHECK (price > 0),
+	PRIMARY KEY(pizzeria, pizza)
+);
+
+
+Find all pizzerias frequented by at least one person under the age of 18.
+
+SELECT Frequents.pizzeria
+FROM Person JOIN Frequents
+	ON Person.name = Frequents.name
+WHERE Person.age < 18;
+
+
+Find all pizzerias that are frequented by only females or only males.
+
+
+SELECT Frequents.pizzeria
+WHERE Frequents.pizzeria IS NOT IN ( -- ONLY Males
+			SELECT Frequents.pizzeria
+			FROM Frequents JOIN Person
+				ON Person.name = Frequents.name
+			WHERE Person.gender = "F" OR Person.gender = "O"
+	)
+UNION
+SELECT Frequents.pizzeria
+WHERE Frequents.pizzeria IS NOT IN ( -- ONLY Females
+			SELECT Frequents.pizzeria
+			FROM Frequents JOIN Person
+				ON Person.name = Frequents.name
+			WHERE Person.gender = "M" OR Person.gender = "O"
+	)
+
+AT HOME: Can you get rid of nesting?
+
+
+
+
