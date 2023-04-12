@@ -2,6 +2,71 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 05: 12/04/2023
+
+## Setup:
+
+Create the following  structure in your private repo:
+
+```
+session5/
+├── setup_database.py
+└── tests
+    ├── conftest.py
+    ├── test_my_database.py
+    └── __init__.py
+```
+
+## Exercise 1: 
+
+Consider a database with the following relational model (schema):
+
+Person (name, age, gender)
+
+Frequents (name, pizzeria)
+
+Eats (name, pizza)
+
+Serves (pizzeria, pizza, price)
+
+### Task 1: Use SQL as DDL.
+
+Implement the Relational Model into a SQLITE database.
+
+Pay attention to domains, types, and define appropriate constraints.
+
+Bonus: Define your own domain
+
+Use a python script `setup_database.py` to automatically create the database and make sure it follows the database factory pattern.
+
+Question: What error do you get if you try creating the same table twice?
+
+### Task 2: Use SQL as DML.
+
+Write SQL expressions that fills up the database with test data.
+
+Pay attention to respect all the constraints and include NULL values if possible.
+
+Use one of more fixtures to create (pseudo) random values, i.e., define appropriate data factories.
+
+Question: What error do you get if you try to insert the same key twice?
+
+### Task 3: Use SQL as QL.
+
+Write SQL expressions implementing the following queries:
+
+1. Find all pizzerias frequented by at least one person under the age of 18.
+2. Find the names of all females who eat either mushroom or pepperoni pizza (or both)
+3. Find the names of all females who eat both mushroom and pepperoni pizza.
+4. Find all pizzerias that serve at least one pizza that Amie eats for less than $10.00
+5. Find all pizzerias that are frequented by only females or only males.
+
+6. For each person, find all pizzas the person eats that are not served by any pizzeria the person frequents. Return all such person (name) / pizza pairs.
+7. Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
+8. Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
+9. Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+
 # Session 04: 29/03/2023
 
 ## Exercise 1: 
