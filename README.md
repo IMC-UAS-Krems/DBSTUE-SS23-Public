@@ -2,6 +2,39 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 06: 19/04/2023
+
+## Keep going with the queries:
+
+Write all the queries from Session 05
+
+## More queries
+
+Consider a database with the following relational model (schema):
+
+Person (name, age, gender) 
+
+Frequents (name, pizzeria) 
+
+Eats (name, pizza)
+
+Serves (pizzeria, pizza, price)
+
+Write SQL expressions for the following three queries:
+
+- Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
+
+- Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
+
+- Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+
+## Deal with References
+A person changes name, update the foreign keys of the related relationships.
+
+Add an update and delete clause and test them.
+
+
 # Session 05: 12/04/2023
 
 ## Setup:
