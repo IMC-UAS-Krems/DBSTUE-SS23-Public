@@ -1,0 +1,160 @@
+
+
+SELECT ...
+FROM  ... SELECT
+WHERE ... SELECT
+GROUP BY
+ORDER BY
+HAVING ... SELECT
+
+** Find all pizzerias frequented by at least one person
+under the age of 18.
+
+SELECT F.pizzeria FROM Frequents F WHERE F.name IN
+( SELECT P.name FROM Person P WHERE P.age < 18 )
+
+** Find the names of all females who eat either mushroom or pepperoni pizza (or both)
+
+SELECT P.name FROM Person P WHERE P.name IN
+(SELECT E.name FROM Eats E WHERE E.pizza = "mushroom" OR E.pizza = "pepperoni") AND P.gender = "F"
+
+
+INSERT INTO Serves VALUES ("mammamia", "pepperoni", 10),("domino", "margherita", 6);
+
+
+INSERT INTO Serves VALUES ("pizzeria", "pepperoni", 8), ("corleone", "pepperoni", 8);
+
+INSERT INTO Serves VALUES ("corleone", "mushrooms", 5);
+
+
+INSERT INTO Person VALUES ("Alessio", 42, "M"),("Gigi", 20, "F");
+
+INSERT INTO Eats VALUES ("Alessio", "pepperoni"),("Gigi", "margherita");
+
+
+INSERT INTO Frequents VALUES ("Alessio", "mammamia"),("Gigi", "domino");
+INSERT INTO Frequents VALUES ("Alessio", "corleone");
+
+INSERT INTO Eats VALUES ("Alessio", "mushrooms");
+INSERT INTO Eats VALUES ("Gigi", "mushrooms");
+
+INSERT INTO Serves VALUES ("domino", "mushrooms", 6);
+
+
+
+*** For each person, find all pizzas the person eats that are not served by any pizzeria the person frequents. 
+
+Return all such person (name) / pizza pairs.
+
+Suggestion 1: Use EXCEPT (difference)
+Suggestion 2: Use NOT IN
+
+
+SELECT E.name, E.pizza
+FROM Eats E
+WHERE E.pizza NOT IN (
+   -- Pizza Served by 
+   SELECT S.pizza
+   FROM Serves S
+   WHERE S.pizzeria IN (
+      -- Pizzeria frequented by person
+      SELECT F.pizzeria
+      FROM Frequents F
+      WHERE F.name = E.name
+   )
+);
+
+
+SELECT S.pizza
+   FROM Serves S
+   WHERE S.pizzeria IN (
+      -- Pizzeria frequented by person
+      SELECT F.pizzeria
+      FROM Frequents F
+      WHERE F.name = "Gigi"
+   );
+
+------------------------------------------------------------
+Person (name, age, gender)
+Frequents (name, pizzeria)
+Eats (name, pizza)
+Serves (pizzeria, pizza, price)
+------------------------------------------------------------
+
+*** Find the pizzeria serving the cheapest pepperoni pizza. 
+MIN(price) - Aggregation
+
+In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+
+-- Return all the pepperoni pizzas (that costs something)
+SELECT S.pizzeria
+FROM Serves S
+WHERE S.price <= (
+	SELECT MIN(S1.price)
+	FROM Serves S1 
+	WHERE S1.pizza = S.pizza
+)  AND S.pizza = "pepperoni"
+
+
+------------------------------------------------------------
+Person (name, age, gender)
+Frequents (name, pizzeria)
+Eats (name, pizza)
+Serves (pizzeria, pizza, price)
+------------------------------------------------------------
+
+
+** Find the names of all people who frequent EVERY 
+pizzeria serving at least one pizza they eat.
+
+
+-- Pizzerias serving something persons like
+
+SELECT P.name
+FROM Person P
+WHERE P.name NOT IN (
+	SELECT F.name
+	FROM Frequents F
+	WHERE P.name = F.name AND
+			F.pizzeria NOT IN (
+				SELECT S.pizzeria
+				FROM Serves S
+				WHERE S.pizza IN (
+					SELECT E.pizza
+					FROM Eats E
+					WHERE P.name = E.name
+				)
+			)
+	)
+
+-----------
+
+-- All pizzeria frequented by people
+
+SELECT F.name, COUNT(F.pizzeria)
+FROM Frequents F
+GROUP BY F.name
+
+-- How many pizzeria servers some that people eat
+
+SELECT F.name, COUNT(F.pizzeria)
+FROM Frequents F
+WHERE F.pizzeria IN (
+    SELECT S.pizzeria
+    FROM Serves S
+    WHERE S.pizza IN (
+        SELECT E.pizza
+        FROM Eats E, Person P
+        WHERE E.name = F.name
+    )
+)
+GROUP BY F.name
+
+
+
+HAVING COUNT(F.pizzeria) = (
+	SELECT COUNT(F1.pizzeria)
+	FROM Frequents F1
+	WHERE F.name = F1.name
+);
