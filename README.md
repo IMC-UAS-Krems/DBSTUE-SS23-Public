@@ -2,6 +2,62 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 07: 26/04/2023
+
+## Views and Queries with Views
+
+### Task 1 
+Create a table based on the following RM and let `note` have the default value "Hello World"
+
+```
+test01(key: integer, value: integer, note: string)
+```
+
+Now create a View on top of the previously created table `test01`, accessing only the attributes `key` and `value`.
+
+Try to insert and update values in that view. How does the table change?
+
+### Task 2
+
+Create another table in the same db as `test01` based on the following RM:
+
+```
+test02(key: integer, test01.key: integer, name: string, note: string)
+```
+
+Insert 2 related entries into these databases, then create a view that presents the attributes `key` and `value` from `test01` and the attribute `name` from `test02`.
+
+Try to insert and update values in that view. How does the table change?
+
+### Task 3
+
+Update the foreign key from `test02` by adding an ON UPDATE and ON DELETE clauses. Make sure they are different, i.e., produce different effects.
+
+1. Which update/delete clause did you choose?
+2. Present how the update/delete clause effected your test02 entry, after updating/deleting the related entry of test01
+
+## Functional Dependency
+
+### Task 1 
+Given a relation R = (A, B, C, D) with the following functional dependencies, list all candidate keys of R:
+
+- A→B
+- B→C
+- C→D
+- D→A
+
+> Can you find an real-life example in which these constraints hold?
+
+### Task 2 
+Given a relation R = (A, B, C, D) with the following functional dependencies, list all candidate keys of R:
+
+- AB→C
+- C→D
+- D→A
+
+> Can you find an real-life example in which these constraints hold?
+
+
 # Session 06: 19/04/2023
 
 ## Keep going with the queries:
@@ -12,7 +68,7 @@ Write all the queries from Session 05
 
 Consider a database with the following relational model (schema):
 
-Person (name, age, gender) 
+Person (name, age, gender)
 
 Frequents (name, pizzeria) 
 
