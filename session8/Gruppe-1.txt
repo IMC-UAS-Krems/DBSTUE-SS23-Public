@@ -1,0 +1,286 @@
+1 - Normalization
+
+--------------------
+
+R = {StudID, CourseID, StudName, CourseName, Grade, FacName, FacPhone}
+
+F:
+StudID -> StudName
+StudID, CourseID -> Grade
+CourseID -> CourseName
+CourseID -> FacName
+FacName -> FacPhone
+
+--------------------
+
+|StudID |CourseID        |StudName |CourseName       |Grade  | FacName         |FacPhone
+|-------|--------------  |-----    |-----            |-----  |-----            |-----
+| 1     | PROG2, DBSE2UE | Adams   | Prog2, Database | 1, 2  | Dhungana, Gambi | 1234, 1122
+| 2     | PROG2          | Jones   | Prog2           | 3     | Dhungana        | 1234
+| 3     | PROG2          | Smith   | Prog2           | 1     | Dhungana        | 1234
+| 4     | PROG2, DBSE2UE | Baker   | Prog2, Database | 3, 1  | Dhungana, Gambi | 1234, 1122
+
+(1NF) 
+
+Is R in 1NF? No, because some attributes are multi-valued
+
+	CourseID, CourseName, FacName, FacPhone, Grade
+
+What do we do? Split the multi-valued attributes and create new records/tuples such that all attributes are now atomic
+
+
+|StudID |CourseID        |StudName |CourseName       |Grade  | FacName         |FacPhone
+|-------|--------------  |-----    |-----            |-----  |-----            |-----
+| 1     | PROG2          | Adams   | Prog2           | 1     | Dhungana        | 1234
+| 1     | DBSE2UE        | Adams   | Database        | 2     | Gambi           | 1122
+| 2     | PROG2          | Jones   | Prog2           | 3     | Dhungana        | 1234
+| 3     | PROG2          | Smith   | Prog2           | 1     | Dhungana        | 1234
+| 4     | PROG2          | Baker   | Prog2           | 3     | Dhungana        | 1234
+| 4     | DBSE2UE        | Baker   | Database        | 1     | Gambi           | 1122
+
+------ Specification given by the designer
+
+StudID -> StudName  ===> {StudID, CourseID} -> StudName  ===> {StudID, CourseID, X} -> StudName          
+{StudID, CourseID} -> Grade ===> {StudID, CourseID, X} -> Grade
+CourseID -> CourseName ===> {StudID, CourseID} -> CourseName ===> {StudID, CourseID, Z} -> CourseName
+CourseID -> FacName  ===> {StudID, CourseID} -> FacName ===> {StudID, CourseID, Z} -> FacName 
+FacName -> FacPhone  ===> {CourseID} -> FacPhone ===> {StudID, CourseID} -> FacPhone 
+
+(2NF)
+	- 1NF
+	- All non-key attributes are fully functional dependent (FFD) on the primary key (PK)
+
+	Is {StudID, CourseID} candidate key? To be candidate key, those superkey must be minimal.
+		{StudID, CourseID} is minimal, thus a candidate key. This is also the only one we have, so it is the PK
+
+	PK: {StudID, CourseID} -> StudName, CourseName, Grade, FacName, FacPhone 
+
+	What do we do? Check whether a partial dependency between prime attributes and non-key attributes exist
+		The attribute Grade is FFD on PK because it requires both StudID and CourseID
+
+		The attribute FacName requires only CourseID, so it is not FFD on PK -> We can conclude this is not 2NF
+
+	What do we do to make it 2NF? We need to decompose the Table into smaller tables... but how?
+
+
+Table: Student: {StudID, StudName}
+	PK:{StudID} is atomic
+
+How did we get it? Take the attributes that are dependent only on StudID: StudID+
+
+|StudID |StudName | 
+|-------|-----    |
+| 1     | Adams   | 
+| 2     | Jones   | 
+| 3     | Smith   | 
+| 4     | Baker   | 
+
+Is this 2NF? Yes, because PK is atomic
+
+Table: Course: {CourseID, CourseName, FacName, FacPhone}
+	PK:{CourseID} is atomic
+| CourseID        |CourseName | FacName         |FacPhone |
+| --------------  |-----      |-----            |-----
+| PROG2           | Prog2     | Dhungana        | 1234
+| DBSE2UE         | Database  | Gambi           | 1122
+
+
+Is this 2NF? Yes, because PK is atomic
+
+Table: Enrolled_In/Grades/Exam/Took/Result {StudID, CourseID, Grade}
+
+PK: {StudID, CourseID} is composite
+
+|StudID | CourseID | Grade
+|-------|-----     |----- 
+| 1     | PROG2    | 1
+| 1     | DBSE2UE  | 2
+| 2     | PROG2    | 3
+| 3     | PROG2    | 1
+| 4     | PROG2    | 3
+| 4     | DBSE2UE  | 1
+
+Is this 2NF? Yes, because Grade (the only nonkey attribute) is FFD on PK.
+
+(3NF):
+	- 2NF 
+	- There should not be (anymore) a FD between nonkey attributes
+
+
+
+
+----
+Derive the missing ones
+----
+Project them onto the new relations
+--- 
+Check
+
+
+Table: Student: {StudID, StudName}
+	PK:{StudID} is atomic
+
+|StudID |StudName | 
+|-------|-----    |
+| 1     | Adams   | 
+| 2     | Jones   | 
+| 3     | Smith   | 
+| 4     | Baker   | 
+
+Is this 3NF? Yes, because there is only one nonkey attribute
+
+Table: Course: {CourseID, CourseName, FacName, FacPhone}
+	PK:{CourseID} is atomic
+
+| CourseID        |CourseName | FacName         |FacPhone
+| --------------  |-----      |-----            |-----
+| PROG2           | Prog2     | Dhungana        | 1234
+| DBSE2UE         | Database  | Gambi           | 1122
+
+
+Is this 3NF? (No)
+	- What are the nonkey attributes? CourseName, FacName, FacPhone
+	- Are they FD on each other? Yes (FacName -> FacPhone)! 
+
+		So Course table is NOT 3NF!
+
+
+Table: Enrolled_In/Grades/Exam/Took/Result {StudID, CourseID, Grade}
+
+PK: {StudID, CourseID} is composite
+
+|StudID | CourseID | Grade
+|-------|-----     |----- 
+| 1     | PROG2    | 1
+| 1     | DBSE2UE  | 2
+| 2     | PROG2    | 3
+| 3     | PROG2    | 1
+| 4     | PROG2    | 3
+| 4     | DBSE2UE  | 1
+
+Is this 3NF?	Yes, there's only Grade as a nonkey attribute.
+
+
+What do we do now? Decompose table Course into smaller relations/tables
+
+
+Table: Course: {CourseID, CourseName, FacName}
+	PK:{CourseID} is atomic
+
+| CourseID        |CourseName | FacName
+| --------------  |-----      |-----      
+| PROG2           | Prog2     | Dhungana
+| DBSE2UE         | Database  | Gambi
+| ADSI2           | Algo      | Dhungana
+
+
+
+We assume that one lecturer always is assigned to the same classes
+
+Table: Faculty {FacName, FacPhone}
+	PK:{FacName} 
+
+| FacName      |FacPhone 
+|-----         |-----    
+| Dhungana     | 1234    
+| Gambi        | 1122    
+
+
+Alternative solution for 3NF use 3 tables!
+
+Table: Course: {CourseID, CourseName}
+	PK:{CourseID} is atomic
+
+| CourseID        |CourseName 
+| --------------  |-----      
+| PROG2           | Prog2     
+| DBSE2UE         | Database  
+| ADSI2           | Algo      
+
+
+Table: Faculty {FacName, FacPhone}
+	PK:{FacName} 
+
+| FacName      |FacPhone 
+|-----         |-----    
+| Dhungana     | 1234    
+| Gambi        | 1122    
+
+
+Table: teaches {FacName, CourseID}
+	PK:{FacName, CourseID} 
+
+| FacName      | CourseID
+|-----         |-----    
+| Dhungana     | PROG2    
+| Gambi        | DBSE2UE   
+
+
+--------------------------------
+
+Table: Student: {StudID, StudName}
+
+Table: Faculty {FacName, FacPhone}
+
+Table: Course: {CourseID, CourseName, FacName}
+
+Table: Enrolled_In/Grades/Exam/Took/Result {StudID, CourseID, Grade}
+
+--------------------------------
+
+
+2 - Transactions: 
+
+
+Summary of the new commands used on MariaDB:
+
+
+Start the MariaDB (Server) as Daemon (background process)
+docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=mypass -p 3306:3306 -d mariadb:latest
+
+Connect as client to the MariaDB (Server) (black console)
+In one terminal run: docker exec -it mariadbtest mariadb --user root -pmypass
+
+Connect again, as a second client to the MariaDB (Server) (white console)
+In a second terminal run: docker exec -it mariadbtest mariadb --user root -pmypass
+
+
+Now you have established two different connections (concurrent connections) to the same database and 
+can play around with transactions by interleaving their atomic commands.
+
+Disable Autocommit:
+To switch autocommit off:
+SET autocommit = 0
+
+Enable Autocommit:
+To switch autocommit on:
+SET autocommit = 1
+
+
+Some commands that we used:
+
+MariaDB [(none)]> show databases;
+
+MariaDB [(none)]> create database session08;
+
+MariaDB [(none)]> connect session08;
+
+MariaDB [session08]> show tables;
+
+
+Next: play around with interleaving of the transaction operations and the isolation level. Refer to the table and check whether setting low isolation levels, indeed let you 
+create dirty reads and the like.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
