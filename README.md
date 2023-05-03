@@ -2,6 +2,43 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 08: 03/05/2023
+
+## Normalization
+
+|StudID |CourseID |StudName |CourseName |Grade| FacName |FacPhone|
+|-----|-----|-----|-----|-----|-----|-----|
+1 | PROG2, DBSE2UE | Adams | Prog2, Database | 1, 2 | Dhungana, Gambi | 1234, 1122
+2 | PROG2 | Jones | Prog2 | 3  | Dhungana | 1234
+3 | PROG2 | Smith | Prog2 | 1  | Dhungana | 1234
+4 | PROG2, DBSE2UE| Baker | Prog2, Database | 3, 1 | Dhungana, Gambi| 1234, 1122
+
+
+Functional Dependencies:
+
+- StudID → StudName
+- StudID, CourseID → Grade
+- CourseID → CourseName
+- CourseID → FacName
+- FacName → FacPhone
+
+Given this information, put the above table in (1) 1NF, (2) 2NF, (3) 3NF and lastly present the final set of tables (as a RM) with meaningful names and mark the PKs.
+                     
+## Transactions
+
+In the lecture we covered different Isolation Anomalies:
+
+- Dirty Read
+- Non-Repeatable Read
+- Phantom Read
+- Serialization Anomaly. 
+
+In there slides, you can find some examples of SQL queries that would result in those anomalies.
+
+Try them out yourself using MariaDB on docker and document your experiences/solutions.
+
+> Note: To simulate concurrent transactions you need two clients and issue the commands manually in the same order. Clients can be two separate connections to the DB or two instance of the Database CLI.
+
 # Session 07: 26/04/2023
 
 ## Views and Queries with Views
