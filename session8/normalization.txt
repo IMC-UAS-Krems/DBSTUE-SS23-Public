@@ -1,0 +1,130 @@
+
+R = { StudID, CourseID, StudName, CourseName, Grade, FacName, FacPhone }
+
+F:
+StudID -> StudName
+StudID courseID -> Grade
+CourseID -> CourseName
+CourseID -> FacName
+FacName -> FacPhone
+
+
+1) 1NF
+    - all attributes are atomic
+    Multi-valued attributes: CourseID, CourseName, Grade, FacName, FacPhone
+
+    |StudID |CourseID       |StudName   |CourseName         |Grade  | FacName                   |FacPhone
+    |-------|---------------|-----------|-------------------|-------|---------------------------|--------
+    1       | PROG2         | Adams     | Database          | 1     | Dhungana                  | 1234
+    1       | DBSE2UE       | Adams     | Database          | 2     | Gambi                     | 1122
+    2       | PROG2         | Jones     | Prog2             | 3     | Dhungana                  | 1234
+    3       | PROG2         | Smith     | Prog2             | 1     | Dhungana                  | 1234
+    4       | PROG2         | Baker     | Prog2             | 3     | Dhungana                  | 1234
+    4       | DBSE2UE       | Baker     | Database          | 1     | Gambi                     | 1122
+
+    StudID -> StudName          (OK)
+    StudID courseID -> Grade    (OK)
+    CourseID -> CourseName      (OK)
+    CourseID -> FacName         (OK)
+    FacName -> FacPhone         (OK)
+
+
+2) 2NF
+    - 1NF => each attribute should be attomic
+    - All non-key attributes are fully functional dependent(FD) on the primary key
+        - No partial dependencies
+        - if PK is atomic the relation is automatically in 2NF
+
+    Candidate keys: { StudID, CourseID }                Key is not atomic ==> need to do something else
+
+            To define: StudName we need StudID but NOT CourseID; thus, StudName is NOT FD on PK
+            To define: CourseName we need CourseID but NOT StudID; thus, CourseName is NOT FD on PK
+            To define FacName we need CourseID but NOT StudID; thus, FacName is NOT FD on PK
+            To define: FacPhone we need CourseID but NOT StudID; thus, FacPhone is NOT FD on PK
+                > Use transitive closure? (pearl)
+
+            GO TO: 2NF you will have to decompose R into smaller tables/ relations
+
+            Table 1:        PKey:{ StudID }
+                | StudID | StudName |
+                |--------|----------|
+                | 1      | Adams    |
+                | 2      | Jones    |
+                | 3      | Smith    |
+                | 4      | Baker    |
+
+                2NF -- OK (PK is atomic)
+
+            Table 2:        PKey:{ CourseID }
+                | CourseID | CourseName | FacName | FacPhone |
+                |----------|-----------|---------|-----------|
+                | PROG2    | Prog2     | Dhungana| 1234      |
+                | DBSE2UE  | Database  | Gambi   | 1122      |
+                | PROG2    | Prog2     | Dhungana| 1234      |
+                | PROG2    | Prog2     | Dhungana| 1234      |
+                | PROG2    | Prog2     | Dhungana| 1234      |
+                | DBSE2UE  | Database  | Gambi   | 1122      |
+
+                2NF -- OK (PK is atomic)
+
+            Table 3:        PKey: { StudID, CourseID }
+                | StudID | CourseID | Grade |
+                |--------|----------|-------|
+                | 1      | PROG2    | 1     |
+                | 1      | DBSE2UE  | 2     |
+                | 2      | PROG2    | 3     |
+                | 3      | PROG2    | 1     |
+                | 4      | PROG2    | 3     |
+                | 4      | DBSE2UE  | 1     |
+                    * you need the studID, as the courseID alone as PK will cause overlap errors
+
+                2NF -- OK (projection FD and then check) becasue grade is FFD on PK
+
+
+3) 3NF
+    - 2NF => no partial dependencies + PK is atomic
+    - No transitive dependencies for non-key attributes (FD between non-key attributes)
+
+    Previous tables:
+        - Table 1: YES in 3NF, because there's only one non-key attribute therefore there cannot be any deps between
+            non-key attributes (not enough to occur)
+
+        - Table 2: NO there is the FD: FacName -> FacPhone
+            non-key attributes: { CourseName, FacName, FacPhone }
+            Solution: split table again, decompose table
+
+            TABLE 2 REPLACED WITH TABLE 4,5,6
+
+        - Table 3: YES in 3NF, because there's only one non-key attribute therefore there cannot be any deps between\
+            Same reason as table 1
+
+
+    Therefor, turn table 2 into table 4 and 5
+
+    Table 4:        PKey: { CourseID }              Name: Course
+        | CourseID  | CourseName
+        |-----------|-----------
+        | PROG2     | Prog2
+        | DBSE2UE   | Database
+
+    Table 5:        PKey: { FacName }               Name: Faculty
+        | FacName   | FacPhone
+        |-----------|-----------
+        | Dhungana  | 1234
+        | Gambi     | 1122
+
+    Table 6:        PKey: { CourseID, FacName }     Name: CourseFaculty/ teaches
+        | CourseID  | FacName
+        |-----------|-----------
+        | PROG2     | Dhungana
+        | DBSE2UE   | Gambi
+
+    Table 3:        PKey: { StudID, CourseID }      Name: Passed
+        | StudID | CourseID | Grade |
+        |--------|----------|-------|
+        | 1      | PROG2    | 1     |
+        | 1      | DBSE2UE  | 2     |
+        | 2      | PROG2    | 3     |
+        | 3      | PROG2    | 1     |
+        | 4      | PROG2    | 3     |
+        | 4      | DBSE2UE  | 1     |
