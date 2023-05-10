@@ -2,6 +2,179 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 09: 10/05/2023
+
+## Transactions 
+
+A schedule, i.e., ordering of operations that belong to different transactions, is **serializable** if it is equivalent to a serial schedule.
+
+A serial schedule consists of executing all the operations comprising a query before executing the operations that belong to the next query.
+
+Are following schedules serializable? Explain your answer.
+
+> Note: `READ (A, t)` stands for reading the value of `A` from the DB and writing to variable `t`, whereas `WRITE (A, t)` stands for store the value `t` in the database as `A`.
+
+### Schedule 1
+| T1 | T2 |
+|----|----|
+|READ (A, t) | | 
+| t := t + 100 | |
+| WRITE (A, t) | |
+| | READ (A, s)| 
+| | s := s * 2 |
+| | WRITE (A, s) |
+| | READ (B, s) |
+| | s := s * 2 |
+| | WRITE (B, s) |
+| READ (B, t) | |
+| t := t + 100 | |
+| WRITE (B, t) | |
+
+### Schedule 2
+| T1 | T2 |
+|----|----|
+|READ (A, t) | | 
+| t := t + 100 | |
+| WRITE (A, t) | |
+| | READ (A, s)| 
+| | s := s * 2 |
+| | WRITE (A, s) |
+| READ (B, t) | |
+| t := t + 100 | |
+| WRITE (B, t) | |
+| | READ (B, s) |
+| | s := s * 2 |
+| | WRITE (B, s) |
+
+## Performance
+
+For this exercise, we need to use an existing database. Among the many sample databases that you find around (e.g., [https://dev.mysql.com/doc/index-other.html](https://dev.mysql.com/doc/index-other.html)) we use the `employee data` a large dataset that includes data and test/verification suite.
+
+The dataset is available also on GitHub:
+[https://github.com/datacharmer/test_db](https://github.com/datacharmer/test_db)
+
+### Setup
+
+Before we can use it with MariaDB, we need to run a new container (or restart the one you have used the last time).
+
+Assume we use a new container, run it with:
+
+```
+docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=mypass -p 3306:3306 -d mariadb:latest 
+```
+
+Now, connect to the running container and start the `bash` interpreter:
+
+`docker exec -it mariadbtest /bin/bash`
+
+You should see a promo like this:
+
+```
+root@25712fc19ceb:/# 
+```
+
+At this point, we can run commands just like any other *nix machine.
+
+First, we update the local package repository:
+
+```
+root@25712fc19ceb:/# apt-get update
+```
+
+Next, we install git:
+```
+root@25712fc19ceb:/# apt-get install git
+```
+
+Then, we clone the Employee DB repo from GitHub:
+
+```
+root@25712fc19ceb:/# git clone https://github.com/datacharmer/test_db.git
+```
+
+And we follow the instructions to load the database and test it is ok:
+
+```
+root@25712fc19ceb:/# cd test_db.git
+root@25712fc19ceb:/test_db#: mariadb --user root -pmypass < employees.sql 
+root@25712fc19ceb:/test_db# mariadb --user root -pmypass -t < test_employees_md5.sql
+
+```
+
+Exit from the container:
+```
+root@25712fc19ceb:/test_db# exit
+```
+
+At this point, we have a (large) database available inside the running docker container and we can connect to it for running queries:
+
+```
+docker exec -it mariadbtest mariadb --user root -pmypass
+```
+
+### Task 1: Query Optimization
+
+- Using the EXPLAIN and ANALYZE statements, execute the following statement and find out the execution plan of it.
+
+```
+SELECT * FROM salaries WHERE salary > 150000;;
+```
+    
+- What is the estimated total cost and what the actual total cost of the plan?
+- Build an index on the field `salary`. What kind of index was created?
+
+```
+CREATE INDEX idx_salary ON salaries(salary);
+```
+
+```
+SHOW INDEX FROM salaries;
+```
+
+- Re-run the query and report its execution plan again.
+
+- What is the estimated total cost and what the actual total cost of the plan?
+
+- Drop the previously created index
+
+```
+ALTER TABLE salaries DROP INDEX idx_salary;
+```
+
+### Task 2:Query Optimization – ORDER BY
+
+- Using the EXPLAIN and ANALYZE statements, execute the following statements and find out the execution plans of them.
+
+```
+  SELECT * FROM employee ORDER BY emp_no;
+  
+  SELECT * FROM salaries ORDER BY salary DESC;
+```
+
+- What is the estimated total cost and what the actual total cost of the plans?
+
+- Which sorting algorithm was used for each of the queries? Why are they different?
+
+- Build an index for the second query on the field `salary `.
+
+- Re-run the second query and report its execution plan again.
+
+- What is the estimated total cost and what the actual total cost of the plan?
+
+- Explain briefly why the sorting remained the same or changed after building the index.
+
+- Change the second query and report changes in the analysis.
+
+```
+SELECT * FROM salaries WHERE salary > 150000 ORDER BY salary;
+
+SELECT * FROM salaries ORDER BY salary LIMIT 10;
+SELECT * FROM salaries ORDER BY salary LIMIT 1000;
+SELECT * FROM salaries ORDER BY salary LIMIT 10000;
+```
+
+- Drop all the previously created indices
+
 # Session 08: 03/05/2023
 
 ## Normalization
