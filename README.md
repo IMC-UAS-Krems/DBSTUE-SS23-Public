@@ -95,7 +95,7 @@ root@25712fc19ceb:/# git clone https://github.com/datacharmer/test_db.git
 And we follow the instructions to load the database and test it is ok:
 
 ```
-root@25712fc19ceb:/# cd test_db.git
+root@25712fc19ceb:/# cd test_db
 root@25712fc19ceb:/test_db#: mariadb --user root -pmypass < employees.sql 
 root@25712fc19ceb:/test_db# mariadb --user root -pmypass -t < test_employees_md5.sql
 
