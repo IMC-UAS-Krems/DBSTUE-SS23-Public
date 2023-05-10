@@ -146,7 +146,7 @@ ALTER TABLE salaries DROP INDEX idx_salary;
 - Using the EXPLAIN and ANALYZE statements, execute the following statements and find out the execution plans of them.
 
 ```
-  SELECT * FROM employee ORDER BY emp_no;
+  SELECT * FROM employees ORDER BY emp_no;
   
   SELECT * FROM salaries ORDER BY salary DESC;
 ```
