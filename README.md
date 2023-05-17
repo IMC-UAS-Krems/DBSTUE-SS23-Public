@@ -132,6 +132,12 @@ Are following schedules serializable? Explain your answer.
 | | s := s * 2 |
 | | WRITE (B, s) |
 
+
+Solutions: 
+
+- [Group 1](session09/session09-group1.pdf)
+- [Group 2](session09/session09-group2.pdf)
+
 ## Performance
 
 For this exercise, we need to use an existing database. Among the many sample databases that you find around (e.g., [https://dev.mysql.com/doc/index-other.html](https://dev.mysql.com/doc/index-other.html)) we use the `employee data` a large dataset that includes data and test/verification suite.
