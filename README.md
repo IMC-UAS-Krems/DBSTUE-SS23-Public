@@ -2,6 +2,92 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 10: 17/05/2023
+
+## Deadlock
+
+Consider the following two transactions: 
+
+T1: 
+```
+begin
+write C 
+read B 
+write C 
+commit
+```
+
+T2: 
+```
+begin
+write B 
+read C 
+read C 
+commit
+```
+
+### Task 1 
+In a DBMS using the two-phase locking algorithm, whether transactions will cause deadlocks depends on how they are executed. If the above two transactions are executed concurrently, under what situations can a deadlock occur?
+
+### Task 2
+In a DBMS that has not implemented any concurrency control algorithms, can **non-repeatable reads** occur if the above two transactions are executed concurrently? 
+
+
+## Performance and Query optimization
+Given the following Schema:
+
+```
+Student (sid, name, age, address)
+Book(bid, title, author)
+Checkout(sid, bid, date)
+```
+
+And assuming:
+
+- There are 10,000 Student records stored on 1,000 pages.
+- There are 50,000 Book records stored on 5,000 pages.
+- There are 300,000 Checkout records stored on 15,000 pages. 
+- There are 500 different authors.
+- Student ages range from 7 to 24.
+
+Given the following SQL query:
+
+```    
+    SELECT S.name
+    FROM Student S, Book B, Checkout C
+    WHERE S.sid = C.sid
+    AND B.bid = C.bid
+    AND B.author = ’Olden Fames’
+    AND S.age > 12
+    AND S.age < 20
+```
+
+### Task 1:
+Show a physical query plan for this query, assuming there are no indexes and data is not sorted on any attribute.
+
+### Task 2: 
+Suggest two indexes and an alternate query plan for this query.
+
+### Query Optimization
+
+Consider the schema:
+`R(a,b), S(b,c), T(b,d), U(b,e)`
+
+For the following SQL query, give two equivalent logical plans in relational algebra such that one is likely to be more efficient than the other. 
+
+Indicate which one is likely to be more efficient. Explain.
+```
+    SELECT R.a
+    FROM R, S
+    WHERE R.b = S.b AND
+          S.c = 3
+```
+          
+## Intro to NoSQL MongoDB
+
+Check [these](session10/mongodb.pdf) slides
+
+
 # Session 09: 10/05/2023
 
 ## Transactions 
