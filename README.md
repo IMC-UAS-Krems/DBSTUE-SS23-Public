@@ -2,6 +2,116 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 11: 24/05/2023
+
+## NoSQL - Document Database - Mongo DB
+
+### Setup
+Start a new mongo db (server):
+
+```docker run --name mongodb --restart always -d mongo```
+
+Connect to the running server:
+
+```
+docker exec -it mongodb mongosh
+```
+
+### Task 1
+Try the basic commands:
+
+- `show dbs` Lists all available databases
+- `use <db>` Switch current database to <db>
+- `show collections` Print a list of all collections for current database
+- `exit` Exits the started mongo and thus also the connection to the container
+
+> Note: You can read more here: [https://www.mongodb.com/docs/manual/tutorial/getting-started/](https://www.mongodb.com/docs/manual/tutorial/getting-started/)
+
+
+### Task 2
+
+Connect to a database called `ex11` and make sure to have the following movies in your `movies`  collection:
+
+1. Title: "Fight Club", Writer: "Chuck Palahniuk", year: "1999", actors: ["Brad Pitt", "Edward Norton"]
+2. Title: "Pulp Fiction", Writer: "Quentin Tarantino", year: "1994", actors: ["John Travolta", "Uma Thurman"]
+3. Title:"IngloriousBasterds",Writer:"QuentinTarantino",year:"2009",actors:["Brad Pitt", "Diane Kruger", "Eli Roth"]
+4. Title: "The Hobbit: An Unexpected Journey", Writer: "J.R.R. Tolkein", year: "2012", franchise: "The Hobbit"
+5. Title: "The Hobbit: The Desolation of Smaug", Writer: "J.R.R. Tolkein", year: "2013", franchise: "The Hobbit"
+6. Title: "The Hobbit: The Battle of the Five Armies", Writer: "J.R.R. Tolkein", year: "2012", franchise: "The Hobbit", synopsis: "Bilbo and Company are forced to engage in a war against an array of combatants and keep the Lonely Mountain from falling into the hands of a rising darkness."
+7. Title:"Pee Wee Herman's Big Adventure"
+8. Title:"Avatar"
+
+### Task 3
+Update the documents:
+
+1. Add the synopsis "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug." to the move with the title "The Hobbit: An Unexpected Journey"
+
+2. Add the synopsis "The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring." to the movie with the title "The Hobbit: The Desolation of Smaug"
+
+3. Add "Samuel L. Jackson" as an actor to the movie "PulpFiction"
+
+### Task 4
+With this updated information query the database with the following text search
+[https://docs.mongodb.com/manual/text-search/](https://docs.mongodb.com/manual/text-search/):
+
+1. List all movies with the word "Gandalf" in their synopsis
+2. List all movies with the word "dwarves" or "hobbit" in their synopsis
+3. List all movies with the word "Bilbo" and not the word "Gandalf" in their synopsis
+
+### Task 5
+Delete the movies "Avatar" and "Pee Wee Herman's Big Adventure" from your database.
+Verify that those movies indeed disappeared
+
+
+## NoSQL - Graph Database - Neo4j
+
+### Setup
+
+Start a new graph database server:
+
+```docker run --name neo --publish=7474:7474 --publish=7687:7687 --env=NEO4J_AUTH=none -d neo4j```
+ 
+Check that everything is running ok by visiting:
+
+`http://localhost:7474`
+
+Use the GUI to connect to the server and then:
+
+### Task 1
+
+- Lists all available databases (`:dbs`)
+- Connect to the `neo4j` database with (`:use <db>`)
+- Show an overview of the database (`CALL db.schema.visualization()`) 
+
+More infos at:
+[https://neo4j.com/docs/cypher-manual/4.0/](https://neo4j.com/docs/cypher-manual/4.0/)
+and
+
+[https://neo4j.com/developer/get-started/](https://neo4j.com/developer/get-started/)
+
+### Task 2
+
+Connect to the running Neo4J with the brower.
+
+Start by following the introduction steps of neo4j, by working through their "Movie Graph" tutorial (`:play movie graph`). 
+
+You can also look here for a step by step guide:
+[https://neo4j.com/developer/cypher/guide-cypher-basics/](https://neo4j.com/developer/cypher/guide-cypher-basics/)
+
+Make sure to execute (and verify) the CREATE-Step before trying anything else of this exercise. 
+
+> Note: DO NOT RUN the Clean-up step before completing the exercise, otherwise you won't have data to work with .
+
+1. Show all nodes and their relationships in your database
+2. Output the amount of created nodes
+3. Output the amount of created relationships
+4. Find all titles of movies in the database
+5. Return all people, who acted in the Movie with the title "Sleepless in Seattle"
+6. Return all actors, who acted besides "Keanu Reeves"
+7. Print out the node and the amount of its relationships of the node with the largest amount of relationships
+8. Insert a new movie, which is not already in the database, including its actors, director(s) and a producer
+
+
 # Session 10: 17/05/2023
 
 ## Deadlock
@@ -57,7 +167,7 @@ Given the following SQL query:
     FROM Student S, Book B, Checkout C
     WHERE S.sid = C.sid
     AND B.bid = C.bid
-    AND B.author = ’Olden Fames’
+    AND B.author = 'Olden Fames'
     AND S.age > 12
     AND S.age < 20
 ```
