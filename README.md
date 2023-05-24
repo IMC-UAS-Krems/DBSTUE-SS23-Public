@@ -9,7 +9,7 @@ This is the repository for your playground, exercises, and homework for Database
 ### Setup
 Start a new mongo db (server):
 
-```docker run --name mongodb --restart always -d mongo```
+```docker run --name mongodb -d mongo```
 
 Connect to the running server:
 
