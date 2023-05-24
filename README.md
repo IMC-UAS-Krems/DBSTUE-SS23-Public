@@ -48,7 +48,7 @@ Update the documents:
 
 2. Add the synopsis "The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring." to the movie with the title "The Hobbit: The Desolation of Smaug"
 
-3. Add "Samuel L. Jackson" as an actor to the movie "PulpFiction"
+3. Add "Samuel L. Jackson" as an actor to the movie "Pulp Fiction"
 
 ### Task 4
 With this updated information query the database with the following text search
