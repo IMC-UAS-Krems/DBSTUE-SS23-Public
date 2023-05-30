@@ -2,6 +2,108 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 12: 31/05/2023
+
+## Semi-Structured Data - XML
+
+### Setup
+
+Find helpful information, tutorials, and examples of DTD, XSD, XPath and XQuery at the following link:
+[https://www.w3schools.com/xml/](https://www.w3schools.com/xml/)
+
+Verification of DTD and XSD can be done via: [https://www.xmlvalidation.com/](https://www.xmlvalidation.com/)
+
+Verification of XPath and XQuery can be done via: 
+[http://xpather.com/](http://xpather.com/) or 
+[https://www.videlibri.de/cgi-bin/xidelcgi](https://www.videlibri.de/cgi-bin/xidelcgi)
+
+For JSON, you can validate JSON against JSON Schema using [https://www.jsonschemavalidator.net/](https://www.jsonschemavalidator.net/) or [https://extendsclass.com/json-schema-validator.html](https://extendsclass.com/json-schema-validator.html)
+
+You can check the syntax of JSON using [https://jsonlint.com/](https://jsonlint.com/) for instance.
+
+### Task 1: DTD
+Create a DTD for the given XML File:
+
+```xml
+<breakfast_menu>
+        <food>
+               <name>Belgian Waffles</name>
+               <price>$5.95</price>
+               <description>Two famous Belgian Waffles with plenty of real maple syrup</description>
+               <calories>650</calories>
+        </food>
+        <food>
+               <name>Strawberry Belgian Waffles</name>
+               <price>$7.95</price>
+               <description>Light Belgian waffles covered with strawberries</description>
+               <calories>900</calories>
+        </food>
+        <food>
+               <name>Berry-Berry Belgian Waffles</name>
+               <price>$8.95</price>
+               <description>Light Belgian waffles covered with fresh berries and cream</description>
+               <calories>900</calories>
+        </food>
+        <food>
+               <name>French Toast</name>
+               <price>$4.50</price>
+               <description>Thick slices made from our homemade sourdough bread</description>
+               <calories>600</calories>
+        </food>
+        <food>
+               <name>Homestyle Breakfast</name>
+               <price>$6.95</price>
+               <description>Two eggs, bacon or sausage, toast, and hash browns</description>
+               <calories>950</calories>
+        </food>
+</breakfast_menu>
+```
+### Task 2 (Optional): XSD
+You could try to create an XSD for the given XML File (Hint: Do not include the DTD from the exercise into the XML when checking the XSD)
+
+### Task 3: XPath
+
+Based on the XML from Task 1, write the following XPaths and their results:
+
+1. Find the 2nd food-Element of the XML
+2. Find the name-Element of the last food of the XML
+3. Find only the name of the last food of the XML (without tags)
+4. Find all foods with calories below 900
+
+### Task 4: XQuery
+Based on the XML from Task 1 formulate the following XQuery. Write them down as well as their results.
+
+1. Return the name of every food above 750 calories
+2. Return the name and price of each food, ordered by the price in ascending order, to fill a prepared HTML-Table (`<table></table`) with the data. (Make the result look something like this: ```<tr><td>name</td><td>price</td></tr><tr>...```)
+3. Return every food if its name starts with a "B"
+4. Return for all distinct values of calories as a separate HTML paragraph (`<p></p>`) including their own heading (`<h2></h2>`) and an ordered html list (`<ol></ol>`) of the names of all foods with exactly that many calories. 
+
+    The result is supposed to look like this (actual result has to contain all 5 foods):
+    
+    ```HTML
+    <p>
+        <h2>Calories: 900</h2>
+        <ol>
+            <li>
+                <name>Strawberry Belgian Waffles</name>
+            </li>
+            <li>
+                <name>Berry-Berry Belgian Waffles</name>
+            </li>
+        </ol>
+    </p>
+    ```
+
+## Semi-Structured Data - JSON
+
+### Task 1: JSON and JSON Schema
+Transform (manually) the XML of Task 1 of the previous exercise into a sensible JSON representation (e.g., array of objects). Then create a JSON Schema for it.
+
+### Task 2: JQ
+
+Try to rewrite the XPaths and XQueries from the previous exercise as jq expressions.
+
+
 # Session 11: 24/05/2023
 
 ## NoSQL - Document Database - Mongo DB
