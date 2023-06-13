@@ -2,6 +2,155 @@
 
 This is the repository for your playground, exercises, and homework for Database Systems 2023
 
+# Session 14: 14/06/2023
+
+Sample exam questions/exercises:
+
+## Entity and Relationship 
+
+Design an ER diagram for a car-insurance company whose customers own one or more cars each.
+Each car has associated with it zero to any number of recorded accidents.
+
+## Relational Model and Relational Algebra
+
+Given the following RM describing a Library:
+
+User (_ID_, Name, Surname, Address, Email)</br>
+Loan (_Placement_, _UserID_, _LoanDate_, ReturnDate)</br>
+BookCopy (_Placement_, ISBN, PurchaseDate)</br>
+Book (_ISBN_, Title, YearPub, Editor, FirstAuthor, Genre)
+
+Write the following queries in RA:
+
+1. Find the title of all the books published in the '00
+2. Find the title of all the books that have not been published in the '00
+3. Find the title of Informatics books loaned in June 2020
+4. Find name, surname, and ID of users that never took an Informatics book
+5. Find the title of all the books loaned or bought in June 2020
+6. Find the title of all the books that have never being loaned
+7. For each user, return the title of the last book loaned
+8. Find the ID of users that have loaned books of all genres
+
+
+## SQL
+
+Considering the exercise above, complete the following tasks:
+
+### Task 1
+
+Write SQL Commands to create the tables, relations, constraints, etc.
+
+### Task 2
+
+Write the following queries in SQL. Use nested queries and `views` when you see fit.
+
+1. Find the title of all the books published in the '00
+2. Find the title of all the books that have not been published in the '00
+3. Show all the details of the book "Applied Informatics"
+4. Find the title of Informatics books loaned in June 2020, sorted by title
+5. Find the title of all the books loaned or bought in June 2020
+6. Find name, surname, and ID of users that never took an Informatics book
+7. For each genre, find the number of times books of that genre have been loaned.
+8. Find name, surname, and ID of users that are overdue.
+9. For each genre, find the number of times books of that genre have been loaned.
+10. List the genres of books that have been loaned at least 20 times.
+11. Find the title of all the books that have never being loaned
+12. Find the genre of books with the biggest amount of loans (cumulative)
+13. For each user, return the last book loaned
+
+
+## Normalization
+
+| StaffNo  | DentistName | PatientNo | PatientName | Appointment data and time | SurgeryNo |
+|--------|--------|--------|--------|--------|--------|
+| S1011  | Tony Smith | P100 | Gillian White | 12-Aug 10:00| S10 |
+| S1011  | Tony Smith | P105| Jill Bell | 13-Aug 12:00 | S15 |
+| S1024  | Helen Pearson | P108| Ian MacKay| 12-Sept 10:00 | S10 |
+| S1024  | Helen Pearson | P108| Ian MacKay| 14-Sept 10:00|S10  |
+| S1032  | Robin Plevin | P105 | Jill Bell | 14-Oct 16:00 |S15 |
+| S1032  | Robin Plevin | P110 | John Walker | 15-Oct 18:00| S13|
+
+### Task 1
+The above table is susceptible to update anomalies. Provide examples of insertion, deletion, and modification anomalies.
+
+### Task 2
+
+Describe and illustrate the process of normalizing the table shown in Figure 1 to 3NF. State any assumptions you make about the data shown in this table.
+
+## Transaction
+
+Given the following schedule:
+
+| Tr  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1  | S(A)  | S(D)  |       |  S(B) |
+| 2  |       |       | X(B)  |       |       |       | X(C)
+| 3  |       |       |       |       |  S(D) | S(C)  |   ||   X(A)|
+| 4  |   |   |   |   |   |   |   |  X(B) |   | 
+
+Check whether the schedule leads to a Deadlock when all the locks are exclusive and when we can distinguish shared and exclusive locks.
+
+Note: The following table shows the lock compatibility os Shared (S) and Exclusive (X) locks:
+
+
+|   | **S** | **X** |
+|---|---|---|
+| **S** | OK | – |
+| **X** | – | – |
+
+
+## Query Optimization
+
+### Task 1
+With reference to the SQL exercise, write the canonical form of the following queries and provide an optimized version of them. If this is not possible/convenient explain why. 
+
+1. Find the title of all the books published in the '00
+2. Find the title of all the books loaned or bought in June 2020
+3. For each genre, find the number of times books of that genre have been loaned.
+4. Find name, surname, and ID of users that are overdue
+
+### Task 2
+With reference to the query plan depicted in the image below:
+
+![image](./session14/query.pdf)
+
+Improve it. Explain.
+
+
+## SemiStructured Data
+
+### Task 1
+
+Given the following DTD create an XML file that contains information about five articles
+written by three authors.
+
+```
+<!DOCTYPE NEWSPAPER [
+
+<!ELEMENT NEWSPAPER (ARTICLE+)>
+<!ELEMENT ARTICLE (HEADLINE,BYLINE,BODY)>
+<!ELEMENT HEADLINE (#PCDATA)>
+<!ELEMENT BYLINE (#PCDATA)>
+<!ELEMENT BODY (#PCDATA)>
+
+<!ATTLIST ARTICLE AUTHOR CDATA #REQUIRED>
+<!ATTLIST ARTICLE DATE CDATA #IMPLIED>
+]>
+```
+
+### Task 2
+
+Write the following XPaths/XQuery:
+
+- Return the name of the three authors
+- Return the title of last two published articles
+- Produce an HTML nested unordered list <UL> that contains a bulled for each author and another unordered list with titles and date of their articles. Both nested lists must be sorted by name of the authors and publication date of the articles
+
+
+# Session 13: 07/06/2023
+
+Virtual Class: Setup the database assignment.
+
 # Session 12: 31/05/2023
 
 ## Semi-Structured Data - XML
