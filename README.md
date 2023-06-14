@@ -15,10 +15,10 @@ Each car has associated with it zero to any number of recorded accidents.
 
 Given the following RM describing a Library:
 
-User (_ID_, Name, Surname, Address, Email)</br>
-Loan (_Placement_, _UserID_, _LoanDate_, ReturnDate)</br>
-BookCopy (_Placement_, ISBN, PurchaseDate)</br>
-Book (_ISBN_, Title, YearPub, Editor, FirstAuthor, Genre)
+User (<ins>ID</ins>, Name, Surname, Address, Email)</br>
+Loan (<ins>Placement</ins>, <ins>UserID</ins>, <ins>LoanDate</ins>, ReturnDate)</br>
+BookCopy (<ins>Placement</ins>, ISBN, PurchaseDate)</br>
+Book (<ins>ISBN</ins>, Title, YearPub, Editor, FirstAuthor, Genre)
 
 Write the following queries in RA:
 
