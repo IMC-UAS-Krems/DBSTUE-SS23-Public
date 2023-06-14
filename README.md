@@ -77,6 +77,16 @@ The above table is susceptible to update anomalies. Provide examples of insertio
 
 Describe and illustrate the process of normalizing the table shown in Figure 1 to 3NF. State any assumptions you make about the data shown in this table.
 
+1NF
+
+| StaffNo  | DentistName | PatientNo | PatientName | Appointment Date | Appointment Time | SurgeryNo |
+|--------|--------|--------|--------|--------|--------|--------|
+| S1011  | Tony Smith | P100 | Gillian White | 12-Aug | 10:00| S10 |
+| S1011  | Tony Smith | P105| Jill Bell | 13-Aug | 12:00 | S15 |
+| S1024  | Helen Pearson | P108| Ian MacKay| 12-Sept | 10:00 | S10 |
+| S1024  | Helen Pearson | P108| Ian MacKay| 14-Sept | 10:00|S10  |
+| S1032  | Robin Plevin | P105 | Jill Bell | 14-Oct | 16:00 |S15 |
+| S1032  | Robin Plevin | P110 | John Walker | 15-Oct | 18:00| S13|
 ## Transaction
 
 Given the following schedule:
