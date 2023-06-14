@@ -112,7 +112,7 @@ With reference to the SQL exercise, write the canonical form of the following qu
 ### Task 2
 With reference to the query plan depicted in the image below:
 
-![image](./session14/query.pdf)
+![image](./session14/query.jpg)
 
 Improve it. Explain.
 
