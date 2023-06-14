@@ -81,12 +81,12 @@ Describe and illustrate the process of normalizing the table shown in Figure 1 t
 
 Given the following schedule:
 
-| Tr  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 1  | S(A)  | S(D)  |       |  S(B) |
-| 2  |       |       | X(B)  |       |       |       | X(C)
-| 3  |       |       |       |       |  S(D) | S(C)  |   ||   X(A)|
-| 4  |   |   |   |   |   |   |   |  X(B) |   | 
+| Tr  | 1     | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    |
+|-----|-------|------|------|------|------|------|------|------|------|
+| 1   | S(A)  | S(D) |      | S(B) |      |      |      |      |      |
+| 2   |       |      | X(B) |      |      |      | X(C) |      |      |
+| 3   |       |      |      |      | S(D) | S(C) |      |      | X(A) |
+| 4   |       |      |      |      |      |      |      | X(B) |      | 
 
 Check whether the schedule leads to a Deadlock when all the locks are exclusive and when we can distinguish shared and exclusive locks.
 
